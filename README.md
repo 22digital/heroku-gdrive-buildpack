@@ -109,17 +109,16 @@ $ aria2c -x16 https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/9491434/sampl
 
 ### To extract `.rar` file
 
-In current directory:
-
-```bash
-$ unrar e standard.rar
-```
-
 With full path:
 
 ```bash
-$ unrar x standard.rar
+$ unrar x ./standard.rar
 ```
 
+In current directory (use with caution):
+
+```bash
+$ unrar e ./standard.rar
+```
 
 [heroku-drive]: https://github.com/thecreativeacademy/heroku-google-drive
