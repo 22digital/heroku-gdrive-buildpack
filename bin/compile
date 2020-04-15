@@ -125,7 +125,7 @@ export GREP_COLOR='1;35;40'
 
 EOF
 
-#### Moving rclone.conf ########
+#### Create script to move rclone.conf ########
 echo "-----> Creating rclone_config.sh script file"
 mkdir -p "$BUILD_DIR"/.profile.d
 cat <<EOF >"$BUILD_DIR"/.profile.d/rclone_config.sh
@@ -135,6 +135,9 @@ indent() {
 }
 
 cd "\$HOME"
+echo "-----> Reloading .bash_profile"
+source ./.bash_profile
+
 echo "-----> Moving rclone.conf config file"
 if [ -f "rclone.conf" ]; then
   mkdir -p .config/rclone
@@ -153,8 +156,5 @@ if [ -f "id_rsa" ]; then
 else
   echo "Error: id_rsa does not exist"  | indent
 fi
-
-echo "-----> Reloading .bash_profile"
-source ~/.bash_profile
 
 EOF
