@@ -93,24 +93,32 @@ View options:
 
 Aria2 is a command-line download accelerator.
 
+#### 231 MB Sample File
+
 ```bash
-$ aria2c -x4 https://example.com/file.rar
+$ aria2c -x16 https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/9491437/standard.rar
 ```
 
-`-x4` sets download using 4 connections.
+#### 617 MB Sample File
+
+```bash
+$ aria2c -x16 https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/9491434/sample.rar
+```
+
+`-x16` sets the total number of connections to the server.
 
 ### To extract `.rar` file
 
 In current directory:
 
 ```bash
-$ unrar e file.rar
+$ unrar e standard.rar
 ```
 
 With full path:
 
 ```bash
-$ unrar x file.rar
+$ unrar x standard.rar
 ```
 
 
