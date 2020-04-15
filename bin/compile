@@ -100,6 +100,31 @@ PROFILE_PATH="$BUILD_DIR/.profile.d/unrar.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
 echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
 
+# Creating bash profile
+echo "-----> Creating .bash_profile file"
+cat <<EOF >"$BUILD_DIR"/.bash_profile
+# Bash
+alias ll='ls -lhgF'
+alias la='ls -lhagF'
+alias ..='cd ..'
+alias ...='cd ...'
+alias ....='cd ....'
+# Git
+git config --global color.ui true
+git config --global format.pretty oneline
+git config --global core.autocrl input
+git config --global core.fileMode true
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias push='git pull origin master && git push origin master'
+alias pull='git pull origin master'
+alias clone='git clone $1'
+# Grep
+alias grep='grep -n'
+export GREP_OPTIONS='--color=auto'
+export GREP_COLOR='1;35;40'
+
+EOF
+
 #### Moving rclone.conf ########
 echo "-----> Creating rclone_config.sh script file"
 mkdir -p "$BUILD_DIR"/.profile.d
@@ -128,30 +153,8 @@ if [ -f "id_rsa" ]; then
 else
   echo "Error: id_rsa does not exist"  | indent
 fi
-EOF
-
-echo "-----> Creating .bash_profile file"
-cat <<EOF >"$BUILD_DIR"/.bash_profile
-# Bash
-alias ll='ls -lhgF'
-alias la='ls -lhagF'
-alias ..='cd ..'
-alias ...='cd ...'
-alias ....='cd ....'
-# Git
-git config --global color.ui true
-git config --global format.pretty oneline
-git config --global core.autocrl input
-git config --global core.fileMode true
-git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias push='git pull origin master && git push origin master'
-alias pull='git pull origin master'
-alias clone='git clone $1'
-# Grep
-alias grep='grep -n'
-export GREP_OPTIONS='--color=auto'
-export GREP_COLOR='1;35;40'
-EOF
 
 echo "-----> Reloading .bash_profile"
 source ~/.bash_profile
+
+EOF
