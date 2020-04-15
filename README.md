@@ -1,95 +1,117 @@
+# Heroku Google Drive Buildpack
 
-
-# Heroku Google Drive
-Remote [Google Drive client](https://github.com/ewwink/heroku-google-drive) on Heroku using Rclone and Aria2
+Remote [Google Drive client][heroku-drive] on Heroku using `rclone` & `WinRAR`.
+Optionally you can download files using `Aria2`.
 
 ## Installation
 Create new app
 
-```
-heroku create myapp -b https://github.com/ewwink/heroku-google-drive.git
-heroku git:clone -a myapp
-```
-
-Existing app, use: `add|set`
-
-```
-heroku buildpacks:set https://github.com/ewwink/heroku-google-drive.git -a myapp
+```bash
+$ heroku create myapp -b https://github.com/thecreativeacademy/heroku-google-drive.git
+$ heroku git:clone -a myapp
 ```
 
-go to `myapp` directory, create or copy `rclone.conf` and winrar registraton key `.rarreg.key` (optional) then commit the change
+Existing app, use: `add|set`.
 
+```bash
+$ heroku buildpacks:set https://github.com/thecreativeacademy/heroku-google-drive.git -a myapp
 ```
-cd myapp
-git add .
-git commit -am "add config"
-git push heroku master
-```
-if you don't have `rclone.conf` download `rclone` and run locally `rclone config` generated config file will be
 
+Go to `myapp` directory, create or copy `rclone.conf` and WinRAR registraton 
+key `.rarreg.key` (optional) then commit the change.
+
+```bash
+$ cd myapp
+$ git add .
+$ git commit -am "add config"
+$ git push heroku master
 ```
+
+If you don't have `rclone.conf` download `rclone` and run `rclone config` 
+locally to generate a config file. This file will be found at:
+
+```text
 Windows: %userprofile%\.config\rclone\rclone.conf
-Linux: $HOME/.config/rclone/rclone.conf
+Linux/macOS: $HOME/.config/rclone/rclone.conf
 ```
+
 ## Usage
-**Open remote Heroku**
-```
-cd myapp
-heroku run bash
-# or
-heroku run bash --remote origin
-```
 
-**Upload to Google Drive**
+### Open a remote Heroku connection
 
-assume `gdrive_config` is your Google drive config name that generated above 
-```
-rclone -v copy local_dir gdrive_config:remote_drive_dir
+```bash
+$ cd myapp
+$ heroku run bash
 ```
 
-**Speed up upload**
-
-If you want to upload many files smaller than 8mb increase only `--transfers` option
+**or:**
 
 ```
-rclone -v --transfers=16 --drive-chunk-size=16384k --drive-upload-cutoff=16384k copy local_dir gdrive_config:remote_drive_dir
+$ heroku run bash --remote origin
+```
+
+### Upload to Google Drive
+
+Assume `gdrive_config` is your Google drive config name that was generated 
+when creating the config file. 
+
+```bash
+$ rclone -v copy local_dir gdrive_config:remote_drive_dir
+```
+
+### Speed up uploads
+
+If you want to upload files smaller than 8mb increase the `--transfers` option.
+
+```bash
+$ rclone -v --transfers=16 --drive-chunk-size=16384k --drive-upload-cutoff=16384k copy local_dir gdrive_config:remote_drive_dir
  ```
-`--transfers=N`  number parallel of connection. `default: 4`
+ 
+`--transfers=N` number parallel of connection (`default: 4`).
 
-` --drive-chunk-size=N` if file bigger than this size it will splits into multiple upload, increase if you want better speed. `default: 8192k or 8mb`
+` --drive-chunk-size=N` if file bigger than this size it will split into 
+multiple uploads. Increase if you want better speed (`default: 8192k or 8mb`).
 
-`--drive-upload-cutoff=N` should be same with chunk size
+`--drive-upload-cutoff=N` should be same with chunk size.
 
-`-v` option to view upload progress stats 
+`-v` option to view upload progress stats.
 
-**view file on Google drive**
+### View file on Google drive
+
+```bash
+$ rclone lsd gdrive_config:remote_drive_dir
 ```
-rclone lsd gdrive_config:remote_drive_dir
-```
-view option:
 
-`lsd` only show file in current directory
+View options:
 
-`ls` show file including in subdirectory (recursvely)
+- `lsd` only show file in current directory.
+- `ls` show file including in subdirectory (recursively).
 
 ## Bonus
-**Download file using `Aria2`**
 
-Aria2 is command-line download accelerator
-```
-aria2c -x4 http://host/file.rar
-```
-`-x4` mean download using 4 connection
+### Download file using `Aria2`
 
-**To extract `.rar` file**
+Aria2 is a command-line download accelerator.
 
-to current directory
-```
-unrar e file.rar
+```bash
+$ aria2c -x4 https://example.com/file.rar
 ```
 
-with full path
+`-x4` sets download using 4 connections.
 
+### To extract `.rar` file
+
+In current directory:
+
+```bash
+$ unrar e file.rar
 ```
-unrar x file.rar
+
+With full path:
+
+```bash
+$ unrar x file.rar
 ```
+
+
+[heroku-drive]: https://github.com/thecreativeacademy/heroku-google-drive

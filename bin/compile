@@ -6,7 +6,7 @@ indent() {
   sed -u 's/^/       /'
 }
 
-###### install Rclone ##########
+###### install rclone ##########
 echo "-----> Installing rclone"
 BUILD_DIR=$1
 CACHE_DIR=$2
@@ -17,15 +17,15 @@ DOWNLOAD_URL="https://downloads.rclone.org/$FILE"
 mkdir -p "$CACHE_DIR"
 
 if ! [ -e "$CACHE_DIR/$FILE" ]; then
-  echo "-----> Fetching Latest Rclone binaries at ${DOWNLOAD_URL}" | indent
+  echo "-----> Fetching Latest rclone binaries at ${DOWNLOAD_URL}" | indent
   wget $DOWNLOAD_URL -q -O "$CACHE_DIR/$FILE"
 else
   filestr=$(find . -name "$CACHE_DIR/$FILE" -mtime +1 -print)
   if [ "$filestr" = "" ]; then
-    echo "-----> cache Expired, Fetching Latest Rclone at ${DOWNLOAD_URL}" | indent
+    echo "-----> Cache Expired, Fetching Latest rclone at ${DOWNLOAD_URL}" | indent
     wget $DOWNLOAD_URL -q -O "$CACHE_DIR/$FILE"
   else
-    echo "build using cached source"  | indent
+    echo "Build using cached source"  | indent
   fi
 fi
 
@@ -38,11 +38,11 @@ cp "$CACHE_DIR/$FILE" .
 unzip -qqj "$FILE"
 rm -rf "$FILE"
 
-echo "exporting PATH" | indent
+echo "Exporting PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/rclone.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
 echo 'export PATH="$PATH:${HOME}/vendor/rclone"' >> $PROFILE_PATH
-echo "Rclone installed"  | indent
+echo "rclone installed"  | indent
 
 ###### install aria2 ##########
 echo "-----> Installing Aria2"
@@ -55,7 +55,7 @@ if ! [ -e "$CACHE_DIR/$FILE_ARC" ]; then
   echo "-----> Fetching Aria2 binaries at ${DOWNLOAD_URL}" | indent
   wget "$DOWNLOAD_URL" -q -O "$CACHE_DIR/$FILE_ARC"
 else
-  echo "build using cached source"  | indent
+  echo "Build using cached source"  | indent
 fi
 
 
@@ -67,7 +67,7 @@ tar jxf "$FILE_ARC"
 mv "$FILE"/* .
 rm -rf "$FILE_ARC" "$FILE"
 
-echo "exporting PATH" | indent
+echo "Exporting PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/aria2c.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
 echo 'export PATH="$PATH:${HOME}/vendor/aria2c"' >> $PROFILE_PATH
@@ -76,14 +76,14 @@ echo 'export PATH="$PATH:${HOME}/vendor/aria2c"' >> $PROFILE_PATH
 
 echo "-----> Installing winrar"
 
-FILE="rarlinux-x64-5.6.b4.tar.gz"
+FILE="rarlinux-5.9.0.tar.gz"
 DOWNLOAD_URL="https://www.rarlab.com/rar/$FILE"
 
 if ! [ -e "$CACHE_DIR/$FILE" ]; then
   echo "-----> Fetching Winrar binaries at ${DOWNLOAD_URL}" | indent
   wget $DOWNLOAD_URL -q -O "$CACHE_DIR/$FILE"
 else
-  echo "build using cached source"  | indent
+  echo "Build using cached source"  | indent
 fi
 
 cd "$BUILD_DIR/$VENDOR_DIR"
@@ -92,7 +92,7 @@ cd winrar
 cp "$CACHE_DIR/$FILE" .
 tar xf "$CACHE_DIR/$FILE" --strip-components=1
 
-echo "exporting PATH" | indent
+echo "Exporting PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/rar.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
 echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
@@ -106,23 +106,23 @@ mkdir -p "$BUILD_DIR"/.profile.d
 cat <<EOF >"$BUILD_DIR"/.profile.d/rclone_config.sh
 #!/bin/sh
 cd "\$HOME"
-echo "-----> moving config file, rclone.conf"
+echo "-----> Moving rclone.conf config file"
 if [ -f "rclone.conf" ]; then
   mkdir -p .config/rclone
   mv -f rclone.conf .config/rclone/rclone.conf
   echo "-----> Done."
 else
-  echo "rclone.conf not exist"  | indent
+  echo "Error: rclone.conf does not exist"  | indent
 fi
 
-echo "-----> moving id_rsa"
+echo "-----> Moving id_rsa"
 if [ -f "id_rsa" ]; then
   mkdir -p .ssh
   mv -f id_rsa .ssh/id_rsa
   chmod 0700 .ssh/id_rsa
   echo "-----> Done."
 else
-  echo "id_rsa not exist"  | indent
+  echo "Error: id_rsa does not exist"  | indent
 fi
 
 
