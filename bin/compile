@@ -6,7 +6,7 @@ indent() {
   sed -u 's/^/       /'
 }
 
-###### install rclone ##########
+###### Install rclone ##########
 echo "-----> Installing rclone"
 BUILD_DIR=$1
 CACHE_DIR=$2
@@ -42,9 +42,9 @@ echo "Exporting PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/rclone.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
 echo 'export PATH="$PATH:${HOME}/vendor/rclone"' >> $PROFILE_PATH
-echo "rclone installed"  | indent
+echo "rclone Installed"  | indent
 
-###### install aria2 ##########
+###### Install Aria2 ##########
 echo "-----> Installing Aria2"
 
 FILE="aria2-1.34.0-linux-gnu-64bit-build1"
@@ -72,7 +72,7 @@ PROFILE_PATH="$BUILD_DIR/.profile.d/aria2c.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
 echo 'export PATH="$PATH:${HOME}/vendor/aria2c"' >> $PROFILE_PATH
 
-#### install winrar ########
+#### Install WinRAR ########
 
 echo "-----> Installing winrar"
 
@@ -100,7 +100,7 @@ PROFILE_PATH="$BUILD_DIR/.profile.d/unrar.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
 echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
 
-#### moving rclone.conf ########
+#### Moving rclone.conf ########
 
 mkdir -p "$BUILD_DIR"/.profile.d
 cat <<EOF >"$BUILD_DIR"/.profile.d/rclone_config.sh
