@@ -105,6 +105,10 @@ echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
 mkdir -p "$BUILD_DIR"/.profile.d
 cat <<EOF >"$BUILD_DIR"/.profile.d/rclone_config.sh
 #!/bin/sh
+indent() {
+  sed -u 's/^/       /'
+}
+
 cd "\$HOME"
 echo "-----> Moving rclone.conf config file"
 if [ -f "rclone.conf" ]; then
