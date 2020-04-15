@@ -135,9 +135,6 @@ indent() {
 }
 
 cd "\$HOME"
-echo "-----> Reloading .bash_profile"
-source ./.bash_profile
-
 echo "-----> Moving rclone.conf config file"
 if [ -f "rclone.conf" ]; then
   mkdir -p .config/rclone
