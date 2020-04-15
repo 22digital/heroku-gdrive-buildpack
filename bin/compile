@@ -101,7 +101,7 @@ mkdir -p "$(dirname "$PROFILE_PATH")"
 echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
 
 #### Moving rclone.conf ########
-
+echo "-----> Creating rclone_config.sh script file"
 mkdir -p "$BUILD_DIR"/.profile.d
 cat <<EOF >"$BUILD_DIR"/.profile.d/rclone_config.sh
 #!/bin/sh
@@ -130,6 +130,7 @@ else
 fi
 EOF
 
+echo "-----> Creating .bash_profile file"
 cat <<EOF >"$BUILD_DIR"/.bash_profile
 # Bash
 alias ll='ls -lhgF'
@@ -151,3 +152,6 @@ alias grep='grep -n'
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;35;40'
 EOF
+
+echo "-----> Reloading .bash_profile"
+source ~/.bash_profile
