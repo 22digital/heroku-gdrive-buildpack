@@ -302,7 +302,7 @@ profile_rclone
 install_aria
 install_winrar
 # install_gitlfs
-profile_bash
+# profile_bash
 
 # Exit gracefully.
 echo "-----> The Buildpack has finished compiling"
