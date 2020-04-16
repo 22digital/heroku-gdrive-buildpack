@@ -98,7 +98,7 @@ install_rclone() {
 profile_rclone() {
   echo "-----> Creating rclone_config.sh script file"
   mkdir -p "${BUILD_DIR}/.profile.d"
-  cat <<EOF >${BUILD_DIR}/.profile.d/rclone_config.sh
+  cat <<EOF >"$BUILD_DIR"/.profile.d/rclone_config.sh
   #!/bin/sh
   indent() {
     sed -u 's/^/       /'
@@ -260,7 +260,7 @@ profile_bash () {
   echo "-----> Creating .bash_profile file"
 
   mkdir -p "${BUILD_DIR}/.profile.d"
-  cat <<EOF >${BUILD_DIR}/.profile.d/bash_profile.sh
+  cat <<EOF >"$BUILD_DIR"/.profile.d/bash_profile.sh
   #!/bin/sh
   # Bash
   alias ll='ls -lhgF'
