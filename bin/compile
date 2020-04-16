@@ -97,8 +97,8 @@ install_rclone() {
 #######################################
 profile_rclone() {
   echo "-----> Creating rclone_config.sh script file"
-  mkdir -p "${BUILD_DIR}"/.profile.d
-  cat <<EOF >"${BUILD_DIR}"/.profile.d/rclone_config.sh
+  mkdir -p "${BUILD_DIR}/.profile.d"
+  cat <<EOF >"${BUILD_DIR}/.profile.d/rclone_config.sh"
   #!/bin/sh
   indent() {
     sed -u 's/^/       /'
@@ -259,8 +259,8 @@ install_gitlfs() {
 profile_bash () {
   echo "-----> Creating .bash_profile file"
 
-  mkdir -p "${BUILD_DIR}"/.profile.d
-  cat <<EOF >"${BUILD_DIR}"/.profile.d/bash_profile.sh
+  mkdir -p "${BUILD_DIR}/.profile.d"
+  cat <<EOF >"${BUILD_DIR}/.profile.d/bash_profile.sh"
   #!/bin/sh
   # Bash
   alias ll='ls -lhgF'
@@ -301,8 +301,8 @@ install_rclone
 profile_rclone
 install_aria
 install_winrar
-# install_gitlfs
-# profile_bash
+install_gitlfs
+profile_bash
 
 # Exit gracefully.
 echo "-----> The Buildpack has finished compiling"
