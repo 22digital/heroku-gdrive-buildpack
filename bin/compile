@@ -32,7 +32,7 @@ indent() {
 # Returns:
 #   None
 #######################################
-globals () {
+globals() {
     BUILD_DIR=$1
     CACHE_DIR=$2
     VENDOR_DIR="vendor"
@@ -301,7 +301,7 @@ install_rclone
 profile_rclone
 install_aria
 install_winrar
-install_gitlfs
+# install_gitlfs
 profile_bash
 
 # Exit gracefully.
