@@ -247,7 +247,7 @@ install_gitlfs() {
 }
 
 #######################################
-# Create bash_profile script.
+# Create git script.
 # Globals:
 #   None
 # Arguments:
@@ -255,18 +255,12 @@ install_gitlfs() {
 # Returns:
 #   None
 #######################################
-profile_bash () {
-  echo "-----> Creating .bash_profile file"
+profile_git () {
+  echo "-----> Creating git profile file"
 
   mkdir -p "${BUILD_DIR}/.profile.d"
-  cat <<EOF >"${BUILD_DIR}/.profile.d/bash_profile.sh"
+  cat <<EOF >"${BUILD_DIR}/.profile.d/git_profile.sh"
 #!/bin/sh
-# Bash
-alias ll='ls -lhgF'
-alias la='ls -lhagF'
-alias ..='cd ..'
-alias ...='cd ...'
-alias ....='cd ....'
 # Git
 git config --global color.ui true
 git config --global format.pretty oneline
@@ -278,6 +272,30 @@ git config --global filter.lfs.required true
 git config --global filter.lfs.clean "git-lfs clean -- %f"
 git config --global filter.lfs.smudge "git-lfs smudge --skip %f"
 git config --global filter.lfs.process "git-lfs filter-process --skip"
+EOF
+
+  echo "Created git profile script"  | indent
+}
+
+#######################################
+# Create .profile with aliases.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+profile_bash () {
+  echo "-----> Creating .profile file"
+
+  cat <<EOF >"${BUILD_DIR}/.profile"
+# Bash
+alias ll='ls -lhgF'
+alias la='ls -lhagF'
+alias ..='cd ..'
+alias ...='cd ...'
+alias ....='cd ....'
 # Aliases
 alias push='git pull origin master && git push origin master'
 alias pull='git pull origin master'
@@ -288,7 +306,7 @@ export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;35;40'
 EOF
 
-  echo "Created bash_profile script"  | indent
+  echo "Created .profile file"  | indent
 }
 
 # Load the global variables.
@@ -300,6 +318,7 @@ profile_rclone
 install_aria
 install_winrar
 install_gitlfs
+profile_git
 profile_bash
 
 # Exit gracefully.
