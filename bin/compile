@@ -6,152 +6,254 @@ indent() {
   sed -u 's/^/       /'
 }
 
-###### Install rclone ##########
-echo "-----> Installing rclone"
-BUILD_DIR=$1
-CACHE_DIR=$2
-VENDOR_DIR="vendor"
-FILE="rclone-current-linux-amd64.zip"
-DOWNLOAD_URL="https://downloads.rclone.org/$FILE"
+#######################################
+# Install rclone with profile file.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+install_rclone() {
+  echo "-----> Installing rclone"
+  
+  BUILD_DIR=$1
+  CACHE_DIR=$2
+  VENDOR_DIR="vendor"
+  FILE="rclone-current-linux-amd64.zip"
+  DOWNLOAD_URL="https://downloads.rclone.org/${FILE}"
+  
+  mkdir -p "${CACHE_DIR}"
+  
+  if ! [ -e "${CACHE_DIR}/${FILE}" ]; then
+    echo "Fetching Latest rclone binaries at ${DOWNLOAD_URL}" | indent
+    wget "${DOWNLOAD_URL}" -q -O "${CACHE_DIR}/${FILE}"
+  else
+    filestr=$(find . -name "${CACHE_DIR}/${FILE}" -mtime +1 -print)
+    if [ "${FILE}str" = "" ]; then
+      echo "Cache Expired, Fetching Latest rclone at ${DOWNLOAD_URL}" | indent
+      wget "${DOWNLOAD_URL}" -q -O "${CACHE_DIR}/${FILE}"
+    else
+      echo "Build using cached source"  | indent
+    fi
+  fi
+  
+  cd "${BUILD_DIR}" || exit 1
+  mkdir -p "${VENDOR_DIR}"
+  cd "${VENDOR_DIR}" || exit 1
+  mkdir -p rclone
+  cd rclone || exit 1
+  cp "${CACHE_DIR}/${FILE}" .
+  unzip -qqj "${FILE}"
+  rm -rf "${FILE}"
+  
+  echo "Exporting PATH" | indent
+  PROFILE_PATH="${BUILD_DIR}/.profile.d/rclone.sh"
+  mkdir -p "$(dirname "${PROFILE_PATH}")"
+  echo 'export PATH="$PATH:${HOME}/vendor/rclone"' >> "${PROFILE_PATH}"
+  echo "rclone Installed"  | indent
+}
 
-mkdir -p "$CACHE_DIR"
+#######################################
+# Create script to move rclone.conf.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+profile_rclone() {
+  echo "-----> Creating rclone_config.sh script file"
+  mkdir -p "${BUILD_DIR}"/.profile.d
+  cat <<EOF >"${BUILD_DIR}"/.profile.d/rclone_config.sh
+  #!/bin/sh
+  indent() {
+    sed -u 's/^/       /'
+  }
+  
+  cd "\$HOME" || exit 1
+  
+  echo "-----> Moving rclone.conf config file"
+  if [ -f "rclone.conf" ]; then
+    mkdir -p .config/rclone
+    mv -f rclone.conf .config/rclone/rclone.conf
+    echo "-----> Done."
+  else
+    echo "Error: rclone.conf does not exist"  | indent
+  fi
+  
+  echo "-----> Moving id_rsa"
+  if [ -f "id_rsa" ]; then
+    mkdir -p .ssh
+    mv -f id_rsa .ssh/id_rsa
+    chmod 0700 .ssh/id_rsa
+    echo "-----> Done."
+  else
+    echo "Error: id_rsa does not exist"  | indent
+  fi
+  
+  EOF
+}
 
-if ! [ -e "$CACHE_DIR/$FILE" ]; then
-  echo "-----> Fetching Latest rclone binaries at ${DOWNLOAD_URL}" | indent
-  wget $DOWNLOAD_URL -q -O "$CACHE_DIR/$FILE"
-else
-  filestr=$(find . -name "$CACHE_DIR/$FILE" -mtime +1 -print)
-  if [ "$filestr" = "" ]; then
-    echo "-----> Cache Expired, Fetching Latest rclone at ${DOWNLOAD_URL}" | indent
-    wget $DOWNLOAD_URL -q -O "$CACHE_DIR/$FILE"
+#######################################
+# Install Aria2 with profile file.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+install_aria() {
+  echo "-----> Installing Aria2"
+  
+  FILE="aria2-1.34.0-linux-gnu-64bit-build1"
+  FILE_ARC="${FILE}.tar.bz2"
+  DOWNLOAD_URL="https://github.com/q3aql/aria2-static-builds/releases/download/v1.34.0/${FILE_ARC}"
+  
+  if ! [ -e "${CACHE_DIR}/${FILE_ARC}" ]; then
+    echo "Fetching Aria2 binaries at ${DOWNLOAD_URL}" | indent
+    wget "${DOWNLOAD_URL}" -q -O "${CACHE_DIR}/${FILE_ARC}"
   else
     echo "Build using cached source"  | indent
   fi
-fi
-
-cd "$BUILD_DIR"
-mkdir -p "$VENDOR_DIR"
-cd "$VENDOR_DIR"
-mkdir -p rclone
-cd rclone
-cp "$CACHE_DIR/$FILE" .
-unzip -qqj "$FILE"
-rm -rf "$FILE"
-
-echo "Exporting PATH" | indent
-PROFILE_PATH="$BUILD_DIR/.profile.d/rclone.sh"
-mkdir -p "$(dirname "$PROFILE_PATH")"
-echo 'export PATH="$PATH:${HOME}/vendor/rclone"' >> $PROFILE_PATH
-echo "rclone Installed"  | indent
-
-###### Install Aria2 ##########
-echo "-----> Installing Aria2"
-
-FILE="aria2-1.34.0-linux-gnu-64bit-build1"
-FILE_ARC="${FILE}.tar.bz2"
-DOWNLOAD_URL="https://github.com/q3aql/aria2-static-builds/releases/download/v1.34.0/$FILE_ARC"
-
-if ! [ -e "$CACHE_DIR/$FILE_ARC" ]; then
-  echo "-----> Fetching Aria2 binaries at ${DOWNLOAD_URL}" | indent
-  wget "$DOWNLOAD_URL" -q -O "$CACHE_DIR/$FILE_ARC"
-else
-  echo "Build using cached source"  | indent
-fi
-
-
-cd "$BUILD_DIR/$VENDOR_DIR"
-mkdir -p aria2c
-cd aria2c
-cp "$CACHE_DIR/$FILE_ARC" .
-tar jxf "$FILE_ARC"
-mv "$FILE"/* .
-rm -rf "$FILE_ARC" "$FILE"
-
-echo "Exporting PATH" | indent
-PROFILE_PATH="$BUILD_DIR/.profile.d/aria2c.sh"
-mkdir -p "$(dirname "$PROFILE_PATH")"
-echo 'export PATH="$PATH:${HOME}/vendor/aria2c"' >> $PROFILE_PATH
-
-#### Install WinRAR ########
-
-echo "-----> Installing winrar"
-
-FILE="rarlinux-x64-5.9.0.tar.gz"
-DOWNLOAD_URL="https://www.rarlab.com/rar/$FILE"
-
-if ! [ -e "$CACHE_DIR/$FILE" ]; then
-  echo "-----> Fetching Winrar binaries at ${DOWNLOAD_URL}" | indent
-  wget $DOWNLOAD_URL -q -O "$CACHE_DIR/$FILE"
-else
-  echo "Build using cached source"  | indent
-fi
-
-cd "$BUILD_DIR/$VENDOR_DIR"
-mkdir -p winrar
-cd winrar
-cp "$CACHE_DIR/$FILE" .
-tar xf "$CACHE_DIR/$FILE" --strip-components=1
-
-echo "Exporting PATH" | indent
-PROFILE_PATH="$BUILD_DIR/.profile.d/rar.sh"
-mkdir -p "$(dirname "$PROFILE_PATH")"
-echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
-PROFILE_PATH="$BUILD_DIR/.profile.d/unrar.sh"
-mkdir -p "$(dirname "$PROFILE_PATH")"
-echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
-
-# Creating bash profile
-echo "-----> Creating .bash_profile file"
-cat <<EOF >"$BUILD_DIR"/.bash_profile
-# Bash
-alias ll='ls -lhgF'
-alias la='ls -lhagF'
-alias ..='cd ..'
-alias ...='cd ...'
-alias ....='cd ....'
-# Git
-git config --global color.ui true
-git config --global format.pretty oneline
-git config --global core.autocrl input
-git config --global core.fileMode true
-git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias push='git pull origin master && git push origin master'
-alias pull='git pull origin master'
-alias clone='git clone $1'
-# Grep
-alias grep='grep -n'
-export GREP_OPTIONS='--color=auto'
-export GREP_COLOR='1;35;40'
-
-EOF
-
-#### Create script to move rclone.conf ########
-echo "-----> Creating rclone_config.sh script file"
-mkdir -p "$BUILD_DIR"/.profile.d
-cat <<EOF >"$BUILD_DIR"/.profile.d/rclone_config.sh
-#!/bin/sh
-indent() {
-  sed -u 's/^/       /'
+  
+  cd "${BUILD_DIR}/${VENDOR_DIR}" || exit 1
+  mkdir -p aria2c
+  cd aria2c || exit 1
+  cp "${CACHE_DIR}/${FILE_ARC}" .
+  tar jxf "${FILE_ARC}"
+  mv "${FILE}"/* .
+  rm -rf "${FILE_ARC}" "${FILE}"
+  
+  echo "Exporting PATH" | indent
+  PROFILE_PATH="${BUILD_DIR}/.profile.d/aria2c.sh"
+  mkdir -p "$(dirname "${PROFILE_PATH}")"
+  echo 'export PATH="$PATH:${HOME}/vendor/aria2c"' >> "${PROFILE_PATH}"
 }
 
-cd "\$HOME"
-echo "-----> Moving rclone.conf config file"
-if [ -f "rclone.conf" ]; then
-  mkdir -p .config/rclone
-  mv -f rclone.conf .config/rclone/rclone.conf
-  echo "-----> Done."
-else
-  echo "Error: rclone.conf does not exist"  | indent
-fi
+#######################################
+# Install WinRAR with profile file.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+install_winrar() {
+  echo "-----> Installing winrar"
+  
+  FILE="rarlinux-x64-5.9.0.tar.gz"
+  DOWNLOAD_URL="https://www.rarlab.com/rar/${FILE}"
+  
+  if ! [ -e "${CACHE_DIR}/${FILE}" ]; then
+    echo "Fetching Winrar binaries at ${DOWNLOAD_URL}" | indent
+    wget "${DOWNLOAD_URL}" -q -O "${CACHE_DIR}/${FILE}"
+  else
+    echo "Build using cached source"  | indent
+  fi
+  
+  cd "${BUILD_DIR}/${VENDOR_DIR}" || exit 1
+  mkdir -p winrar
+  cd winrar || exit 1
+  cp "${CACHE_DIR}/${FILE}" .
+  tar xf "${CACHE_DIR}/${FILE}" --strip-components=1
+  
+  echo "Exporting PATH" | indent
+  PROFILE_PATH="${BUILD_DIR}/.profile.d/rar.sh"
+  mkdir -p "$(dirname "${PROFILE_PATH}")"
+  echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> "${PROFILE_PATH}"
 
-echo "-----> Moving id_rsa"
-if [ -f "id_rsa" ]; then
-  mkdir -p .ssh
-  mv -f id_rsa .ssh/id_rsa
-  chmod 0700 .ssh/id_rsa
-  echo "-----> Done."
-else
-  echo "Error: id_rsa does not exist"  | indent
-fi
+  PROFILE_PATH="${BUILD_DIR}/.profile.d/unrar.sh"
+  mkdir -p "$(dirname "${PROFILE_PATH}")"
+  echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> "${PROFILE_PATH}"
+}
 
-EOF
+#######################################
+# Install Git LFS with profile file.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+install_gitlfs() {
+  echo "-----> Installing Git Large File Storage"
+
+  VERSION="v2.10.0"
+  FILE="git-lfs-linux-amd64-${VERSION}.tar.gz"
+  DOWNLOAD_URL="https://github.com/git-lfs/git-lfs/releases/download/${VERSION}/${FILE}"
+  
+  if ! [ -e "${CACHE_DIR}/${FILE}" ]; then
+    echo "Fetching Git LFS binaries at ${DOWNLOAD_URL}" | indent
+    wget "${DOWNLOAD_URL}" -q -O "${CACHE_DIR}/${FILE}"
+  else
+    echo "Build using cached source"  | indent
+  fi
+  
+  cd "${BUILD_DIR}/${VENDOR_DIR}" || exit 1
+  mkdir -p git-lfs
+  cd git-lfs || exit 1
+  cp "${CACHE_DIR}/${FILE}" .
+  tar zxf "${FILE}"
+  rm "${FILE}"
+  
+  echo "Exporting PATH" | indent
+  PROFILE_PATH="${BUILD_DIR}/.profile.d/git_lfs.sh"
+  mkdir -p "$(dirname "${PROFILE_PATH}")"
+  echo 'export PATH="$PATH:${HOME}/vendor/git-lfs"' >> "${PROFILE_PATH}"
+}
+
+#######################################
+# Create bash_profile script.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+profile_bash () {
+  echo "-----> Creating .bash_profile file"
+
+  mkdir -p "${BUILD_DIR}"/.profile.d
+  cat <<EOF >"${BUILD_DIR}"/.profile.d/bash_profile.sh
+  # Bash
+  alias ll='ls -lhgF'
+  alias la='ls -lhagF'
+  alias ..='cd ..'
+  alias ...='cd ...'
+  alias ....='cd ....'
+  # Git
+  git config --global color.ui true
+  git config --global format.pretty oneline
+  git config --global core.autocrl input
+  git config --global core.fileMode true
+  git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+  # Git LFS
+  git config --global filter.lfs.required true
+  git config --global filter.lfs.clean "git-lfs clean -- %f"
+  git config --global filter.lfs.smudge "git-lfs smudge --skip %f"
+  git config --global filter.lfs.process "git-lfs filter-process --skip"
+  # Aliases
+  alias push='git pull origin master && git push origin master'
+  alias pull='git pull origin master'
+  alias clone='git clone $1'
+  # Grep
+  alias grep='grep -n'
+  export GREP_OPTIONS='--color=auto'
+  export GREP_COLOR='1;35;40'
+  
+  EOF
+}
+
+install_rclone
+profile_rclone
+install_aria
+install_winrar
+install_gitlfs
+profile_bash
