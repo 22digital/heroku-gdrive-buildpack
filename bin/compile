@@ -10,7 +10,7 @@ indent() {
 echo "-----> Installing rclone"
 BUILD_DIR=$1
 CACHE_DIR=$2
-VENDOR_DIR="gdrive"
+VENDOR_DIR="vendor"
 FILE="rclone-current-linux-amd64.zip"
 DOWNLOAD_URL="https://downloads.rclone.org/$FILE"
 
@@ -41,7 +41,7 @@ rm -rf "$FILE"
 echo "Exporting PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/rclone.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
-echo 'export PATH="$PATH:${HOME}/${VENDOR_DIR}/rclone"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:${HOME}/vendor/rclone"' >> $PROFILE_PATH
 echo "rclone Installed"  | indent
 
 ###### Install Aria2 ##########
@@ -70,7 +70,7 @@ rm -rf "$FILE_ARC" "$FILE"
 echo "Exporting PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/aria2c.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
-echo 'export PATH="$PATH:${HOME}/${VENDOR_DIR}/aria2c"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:${HOME}/vendor/aria2c"' >> $PROFILE_PATH
 
 #### Install WinRAR ########
 
@@ -95,10 +95,10 @@ tar xf "$CACHE_DIR/$FILE" --strip-components=1
 echo "Exporting PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/rar.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
-echo 'export PATH="$PATH:${HOME}/${VENDOR_DIR}/winrar"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
 PROFILE_PATH="$BUILD_DIR/.profile.d/unrar.sh"
 mkdir -p "$(dirname "$PROFILE_PATH")"
-echo 'export PATH="$PATH:${HOME}/${VENDOR_DIR}/winrar"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> $PROFILE_PATH
 
 # Creating bash profile
 echo "-----> Creating .bash_profile file"
@@ -152,14 +152,6 @@ if [ -f "id_rsa" ]; then
   echo "-----> Done."
 else
   echo "Error: id_rsa does not exist"  | indent
-fi
-
-echo "-----> Moving .rarreg.key"
-if [ -f ".rarreg.key" ]; then
-  mv -f .rarreg.key /usr/local/etc/.rarreg.key
-  echo "-----> Done."
-else
-  echo "Error: .rarreg.key does not exist"  | indent
 fi
 
 EOF
