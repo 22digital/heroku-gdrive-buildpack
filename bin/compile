@@ -1,5 +1,12 @@
 #!/bin/sh
-
+#
+# Heroku Buildpack which installs rclone, WinRAR, Aria2 and Git LFS.
+#
+# Author: Justin Hartman <j.hartman@ctca.co.za>
+# Version: 2.0.0
+# Link: https://github.com/thecreativeacademy/heroku-media
+# Copyright (c) 2020 Cape Town Creative Academy <https://ctca.co.za>
+#
 set -e
 
 #######################################
@@ -17,6 +24,22 @@ indent() {
 }
 
 #######################################
+# Defines set of global variables.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+globals () {
+    BUILD_DIR=$1
+    CACHE_DIR=$2
+    VENDOR_DIR="vendor"
+    export BUILD_DIR CACHE_DIR VENDOR_DIR
+}
+
+#######################################
 # Install rclone with profile file.
 # Globals:
 #   None
@@ -27,10 +50,7 @@ indent() {
 #######################################
 install_rclone() {
   echo "-----> Installing rclone"
-  
-  BUILD_DIR=$1
-  CACHE_DIR=$2
-  VENDOR_DIR="vendor"
+
   FILE="rclone-current-linux-amd64.zip"
   DOWNLOAD_URL="https://downloads.rclone.org/${FILE}"
   
@@ -62,7 +82,8 @@ install_rclone() {
   PROFILE_PATH="${BUILD_DIR}/.profile.d/rclone.sh"
   mkdir -p "$(dirname "${PROFILE_PATH}")"
   echo 'export PATH="$PATH:${HOME}/vendor/rclone"' >> "${PROFILE_PATH}"
-  echo "rclone Installed"  | indent
+  
+  echo "Installed rclone"  | indent
 }
 
 #######################################
@@ -105,6 +126,8 @@ profile_rclone() {
   fi
   
   EOF
+  
+  echo "Created rclone_config script"  | indent
 }
 
 #######################################
@@ -142,6 +165,8 @@ install_aria() {
   PROFILE_PATH="${BUILD_DIR}/.profile.d/aria2c.sh"
   mkdir -p "$(dirname "${PROFILE_PATH}")"
   echo 'export PATH="$PATH:${HOME}/vendor/aria2c"' >> "${PROFILE_PATH}"
+  
+  echo "Installed Aria2"  | indent
 }
 
 #######################################
@@ -180,6 +205,8 @@ install_winrar() {
   PROFILE_PATH="${BUILD_DIR}/.profile.d/unrar.sh"
   mkdir -p "$(dirname "${PROFILE_PATH}")"
   echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> "${PROFILE_PATH}"
+  
+  echo "Installed WinRAR"  | indent
 }
 
 #######################################
@@ -216,6 +243,8 @@ install_gitlfs() {
   PROFILE_PATH="${BUILD_DIR}/.profile.d/git_lfs.sh"
   mkdir -p "$(dirname "${PROFILE_PATH}")"
   echo 'export PATH="$PATH:${HOME}/vendor/git-lfs"' >> "${PROFILE_PATH}"
+  
+  echo "Installed Git LFS"  | indent
 }
 
 #######################################
@@ -232,6 +261,7 @@ profile_bash () {
 
   mkdir -p "${BUILD_DIR}"/.profile.d
   cat <<EOF >"${BUILD_DIR}"/.profile.d/bash_profile.sh
+  #!/bin/sh
   # Bash
   alias ll='ls -lhgF'
   alias la='ls -lhagF'
@@ -259,11 +289,21 @@ profile_bash () {
   export GREP_COLOR='1;35;40'
   
   EOF
+  
+  echo "Created bash_profile script"  | indent
 }
 
+# Load the global variables.
+globals "$@"
+
+# Run the main application
 install_rclone
 profile_rclone
 install_aria
 install_winrar
 install_gitlfs
 profile_bash
+
+# Exit gracefully.
+echo "-----> The Buildpack has finished compiling"
+exit 0
