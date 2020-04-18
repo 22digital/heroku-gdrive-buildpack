@@ -178,6 +178,8 @@ install_aria() {
 #######################################
 profile_aria_conf() {
   echo "-----> Creating aria2.conf configuration file"
+  
+  mkdir -p "${BUILD_DIR}/.aria2"
   cat <<EOF >"${BUILD_DIR}/.aria2/aria2.conf"
 ## aria2 config
 # Download Directory: specify the directory all files will be downloaded to.
