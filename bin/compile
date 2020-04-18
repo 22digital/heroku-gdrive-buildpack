@@ -167,6 +167,52 @@ install_aria() {
 
   echo "Installed Aria2"  | indent
 }
+#######################################
+# Create aria2.conf file.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+profile_aria_conf() {
+  echo "-----> Creating aria2.conf configuration file"
+  cat <<EOF >"${BUILD_DIR}/.aria2/aria2.conf"
+## aria2 config
+# Download Directory: specify the directory all files will be downloaded to.
+#dir=/download/
+# File Names: Resume file downloads if we have a partial copy. Do not rename
+# the file or make another copy if the same file is downloaded a second time.
+allow-overwrite=true
+always-resume=true
+auto-file-renaming=false
+continue=true
+remote-time=true
+# User Agent: Disable the identification string of our client. Set to FF macOS.
+peer-id-prefix=""
+user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:76.0) Gecko/20100101 Firefox/76.0"
+# Status Summary messages are disabled since the status of the download is
+# updated in real time on the CLI anyways.
+summary-interval=0
+# FTP: use passive ftp which is firewall friendly
+ftp-pasv=true
+ftp-reuse-connection=true
+# Concurrent downloads: Set the number of different servers to download from
+# concurrently; i.e. in parallel.
+max-concurrent-downloads=1
+max-connection-per-server=16
+min-split-size=5M
+split=10
+# Reference: the following options are the developers defaults.
+disable-ipv6=true
+http-accept-gzip=true
+log=/app/logs/aria2.log
+log-level=error
+EOF
+
+  echo "Created aria2.conf file"  | indent
+}
 
 #######################################
 # Install WinRAR with profile file.
