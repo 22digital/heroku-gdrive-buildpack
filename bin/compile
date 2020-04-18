@@ -315,6 +315,9 @@ git config --global format.pretty oneline
 git config --global core.autocrl input
 git config --global core.fileMode true
 git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+# Git user settings
+git config --global user.name "Automated GitHub User"
+git config --global user.email "j.hartman@ctca.co.za"
 # Git LFS
 git config --global filter.lfs.required true
 git config --global filter.lfs.clean "git-lfs clean -- %f"
