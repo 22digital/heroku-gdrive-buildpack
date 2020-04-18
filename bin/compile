@@ -362,6 +362,7 @@ globals "$@"
 install_rclone
 profile_rclone
 install_aria
+profile_aria_conf
 install_winrar
 install_gitlfs
 profile_git
