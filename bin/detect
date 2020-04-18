@@ -1,5 +1,9 @@
 #!/bin/sh
 
-# this pack is valid for all apps
-echo "gdrive-client"
-exit 0
+# This pack is valid for apps with a rclone.conf file in the root.
+if [ -f $1/rclone.conf ]; then
+  echo "Heroku Google Drive Buildpack"
+  exit 0
+else
+  exit 1
+fi

@@ -4,7 +4,7 @@
 #
 # Author: Justin Hartman <j.hartman@ctca.co.za>
 # Version: 2.0.0
-# Link: https://github.com/thecreativeacademy/heroku-media
+# Link: https://github.com/thecreativeacademy/heroku-gdrive-buildpack
 # Copyright (c) 2020 Cape Town Creative Academy <https://ctca.co.za>
 #
 set -e
@@ -178,7 +178,7 @@ install_aria() {
 #######################################
 profile_aria_conf() {
   echo "-----> Creating aria2.conf configuration file"
-  
+
   mkdir -p "${BUILD_DIR}/.aria2"
   cat <<EOF >"${BUILD_DIR}/.aria2/aria2.conf"
 ## aria2 config
@@ -309,7 +309,7 @@ profile_git () {
   mkdir -p "${BUILD_DIR}/.profile.d"
   cat <<EOF >"${BUILD_DIR}/.profile.d/git_profile.sh"
 #!/bin/sh
-# Git
+# Git Config
 git config --global color.ui true
 git config --global format.pretty oneline
 git config --global core.autocrl input
@@ -355,6 +355,26 @@ alias clone='git clone $1'
 alias grep='grep -n'
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;35;40'
+# Git commands
+## General
+alias gcf='git config --list'
+alias gd='git diff'
+## Clone/Checkout
+alias gcl='git clone --recurse-submodules'
+alias gcm='git checkout master'
+## Commit
+alias gcam='git commit -a -m'
+alias gcmsg='git commit -m'
+## Push & Pull
+alias gp='git push'
+alias gpoat='git push origin --all && git push origin --tags'
+alias gl='git pull'
+alias glo='git pull origin master'
+## Tagging
+alias gts='git tag -s'
+## Stats/Status
+alias gsb='git status -sb'
+alias glol="git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 EOF
 
   echo "Created .profile file"  | indent
