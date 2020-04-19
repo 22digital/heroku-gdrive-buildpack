@@ -55,9 +55,10 @@ $ heroku buildpacks:set https://github.com/thecreativeacademy/heroku-gdrive-buil
 root of project. The build pack **will not run** if you do not have this file 
 in this location.
 
-3). Go to `myapp` directory and update configuration in `rclone.conf`.   
-4). Optionally, and a WinRAR registration key in the `.rarreg.key` file.   
-5). Commit all the changes.   
+3). Go to `myapp` directory and update configuration in `rclone.conf`.  
+4). Optionally, add a `WinRAR` registration key in the `.rarreg.key` file (or 
+create one if your app doesn't have this key).  
+5). Commit all the changes.  
 
 ```bash
 $ cd myapp
