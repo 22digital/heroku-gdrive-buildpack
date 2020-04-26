@@ -210,7 +210,7 @@ split=10
 disable-ipv6=true
 http-accept-gzip=true
 log=/app/logs/aria2.log
-log-level=info
+log-level=notice
 EOF
 
   echo "Created aria2.conf file"  | indent
