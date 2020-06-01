@@ -1,5 +1,7 @@
 # Heroku Google Drive Buildpack
 
+[![Build Status][travis-img]][travis-url]
+
 Remote [Google Drive client][heroku-drive] on Heroku using `rclone` to 
 sync/upload/download files. Optionally you can download files using `Aria2` 
 and unpack/pack `.rar` files using `WinRAR`. There is also an installation of
@@ -215,3 +217,5 @@ $ unrar e ./standard.rar
 [lfs]: https://git-lfs.github.com/
 [rclone]: https://rclone.org
 [winrar]: https://www.rarlab.com/
+[travis-img]: https://travis-ci.org/22digital/heroku-gdrive-buildpack.svg?branch=master
+[travis-url]: https://travis-ci.org/22digital/heroku-gdrive-buildpack
