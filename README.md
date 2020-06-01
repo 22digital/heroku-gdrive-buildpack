@@ -42,14 +42,14 @@ The following apps are installed alongside this buildback:
 1). Create new app:
 
 ```bash
-$ heroku create myapp -b https://github.com/22digital/heroku-gdrive-buildpack.git
+$ heroku create myapp -b 22digital/gdrive-rclone
 $ heroku git:clone -a myapp
 ```
 
 2). Existing app, use: `add|set`.
 
 ```bash
-$ heroku buildpacks:set https://github.com/22digital/heroku-gdrive-buildpack.git -a myapp
+$ heroku buildpacks:set 22digital/gdrive-rclone -a myapp
 ```
 
 **NB:** To run this buildpack you **must have** an `rclone.conf` file in the 
