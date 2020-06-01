@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2016,SC2119,SC2120
 #
 # Heroku Buildpack which installs rclone, WinRAR, Aria2 and Git LFS.
 #
@@ -82,7 +83,7 @@ install_rclone() {
     echo "Exporting PATH" | indent
     PROFILE_PATH="${BUILD_DIR}/.profile.d/rclone.sh"
     mkdir -p "$(dirname "${PROFILE_PATH}")"
-    echo "export PATH='$PATH:${HOME}/vendor/rclone'" >> "${PROFILE_PATH}"
+    echo 'export PATH="$PATH:${HOME}/vendor/rclone"' >> "${PROFILE_PATH}"
 
     echo "Installed rclone" | indent
 }
@@ -164,7 +165,7 @@ install_aria() {
     echo "Exporting PATH" | indent
     PROFILE_PATH="${BUILD_DIR}/.profile.d/aria2c.sh"
     mkdir -p "$(dirname "${PROFILE_PATH}")"
-    echo "export PATH='$PATH:${HOME}/vendor/aria2c'" >> "${PROFILE_PATH}"
+    echo 'export PATH="$PATH:${HOME}/vendor/aria2c"' >> "${PROFILE_PATH}"
 
     echo "Installed Aria2" | indent
 }
@@ -248,11 +249,11 @@ install_winrar() {
     echo "Exporting PATH" | indent
     PROFILE_PATH="${BUILD_DIR}/.profile.d/rar.sh"
     mkdir -p "$(dirname "${PROFILE_PATH}")"
-    echo "export PATH='$PATH:${HOME}/vendor/winrar'" >> "${PROFILE_PATH}"
+    echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> "${PROFILE_PATH}"
 
     PROFILE_PATH="${BUILD_DIR}/.profile.d/unrar.sh"
     mkdir -p "$(dirname "${PROFILE_PATH}")"
-    echo "export PATH='$PATH:${HOME}/vendor/winrar'" >> "${PROFILE_PATH}"
+    echo 'export PATH="$PATH:${HOME}/vendor/winrar"' >> "${PROFILE_PATH}"
 
     echo "Installed WinRAR" | indent
 }
@@ -290,7 +291,7 @@ install_gitlfs() {
     echo "Exporting PATH" | indent
     PROFILE_PATH="${BUILD_DIR}/.profile.d/git_lfs.sh"
     mkdir -p "$(dirname "${PROFILE_PATH}")"
-    echo "export PATH='$PATH:${HOME}/vendor/git-lfs'" >> "${PROFILE_PATH}"
+    echo 'export PATH="$PATH:${HOME}/vendor/git-lfs"' >> "${PROFILE_PATH}"
 
     echo "Installed Git LFS" | indent
 }
