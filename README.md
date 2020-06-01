@@ -1,7 +1,7 @@
 # Heroku Google Drive Buildpack
 
 Remote [Google Drive client][heroku-drive] on Heroku using `rclone` to 
-sync/upload/download files to. Optionally you can download files using `Aria2` 
+sync/upload/download files. Optionally you can download files using `Aria2` 
 and unpack/pack `.rar` files using `WinRAR`. There is also an installation of
 `Git LFS` for usage in large filesystem git repositories.
 
@@ -26,7 +26,6 @@ and unpack/pack `.rar` files using `WinRAR`. There is also an installation of
 
 <!-- /MarkdownTOC -->
 
-
 ## Applications
 
 The following apps are installed alongside this buildback:
@@ -41,14 +40,14 @@ The following apps are installed alongside this buildback:
 1). Create new app:
 
 ```bash
-$ heroku create myapp -b https://github.com/thecreativeacademy/heroku-gdrive-buildpack.git
+$ heroku create myapp -b https://github.com/22digital/heroku-gdrive-buildpack.git
 $ heroku git:clone -a myapp
 ```
 
 2). Existing app, use: `add|set`.
 
 ```bash
-$ heroku buildpacks:set https://github.com/thecreativeacademy/heroku-gdrive-buildpack.git -a myapp
+$ heroku buildpacks:set https://github.com/22digital/heroku-gdrive-buildpack.git -a myapp
 ```
 
 **NB:** To run this buildpack you **must have** an `rclone.conf` file in the 
@@ -71,13 +70,13 @@ $ git push heroku master
 
 This buildpack installs packages to the following locations:
 
-| Application | Path                        |
-|:------------|:----------------------------|
-| aria2c      | /app/vendor/aria2c/aria2c   |
-| git-lfs     | /app/vendor/git-lfs/git-lfs |
-| rclone      | /app/vendor/rclone/rclone   |
-| rar         | /app/vendor/winrar/rar      |
-| unrar       | /app/vendor/winrar/unrar    |
+| Application  | Path                         |
+|:-------------|:-----------------------------|
+| aria2c       | /app/vendor/aria2c/aria2c    |
+| git-lfs      | /app/vendor/git-lfs/git-lfs  |
+| rclone       | /app/vendor/rclone/rclone    |
+| rar          | /app/vendor/winrar/rar       |
+| unrar        | /app/vendor/winrar/unrar     |
 
 ## Configure Rclone Remote
 
@@ -210,7 +209,7 @@ In current directory (use with caution):
 $ unrar e ./standard.rar
 ```
 
-[heroku-drive]: https://github.com/thecreativeacademy/heroku-gdrive-buildpack
+[heroku-drive]: https://github.com/22digital/heroku-gdrive-buildpack
 [rclone-drive]: https://rclone.org/drive/
 [aria]: https://aria2.github.io/
 [lfs]: https://git-lfs.github.com/

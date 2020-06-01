@@ -1,9 +1,16 @@
 #!/bin/sh
-
+#
 # This pack is valid for apps with a rclone.conf file in the root.
-if [ -f $1/rclone.conf ]; then
-  echo "Heroku Google Drive Buildpack"
-  exit 0
+#
+# Copyright 2020 22 Digital <https://22digital.co.za>
+# Author: Justin Hartman <justin@22digital.co.za>
+# Version: 2.0.2
+# Link: https://github.com/22digital/heroku-gdrive-buildpack
+# License: MIT https://opensource.org/licenses/MIT
+#
+if [ -f "$1/rclone.conf" ]; then
+    echo "Heroku Google Drive Buildpack"
+    exit 0
 else
-  exit 1
+    exit 1
 fi
